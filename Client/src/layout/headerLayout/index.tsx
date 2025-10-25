@@ -1,7 +1,7 @@
 import "./style.scss";
 import avatar from "../../assets/images/avatar.jpg";
 import CreateIcon from "@mui/icons-material/Create";
-import SiderLayout from "../../layout/siderLayout";
+import SiderLayout from "../siderLayout";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Badge, Space } from "antd";
 import { Outlet } from "react-router-dom";

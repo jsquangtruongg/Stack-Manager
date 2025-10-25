@@ -1,5 +1,5 @@
 import "./style.scss";
-import avatar from "../../../assets/images/avatar.jpg";
+import avatar from "../../../assets/images/avatar.png";
 
 import CreateIcon from "@mui/icons-material/Create";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
