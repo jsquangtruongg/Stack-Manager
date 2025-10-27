@@ -1,6 +1,4 @@
 import "./style.scss";
-import avatar from "../../../assets/images/avatar.png";
-
 import CreateIcon from "@mui/icons-material/Create";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import AppsIcon from "@mui/icons-material/Apps";
@@ -18,12 +16,31 @@ import { LinearProgress } from "@mui/material";
 import SimCardIcon from "@mui/icons-material/SimCard";
 import MessageIcon from "@mui/icons-material/Message";
 import { useEffect, useRef, useState } from "react";
+import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
+import { Modal, Input, Form, Select, DatePicker, Avatar, Tooltip } from "antd";
 import * as echarts from "echarts";
-import type { EChartsOption } from "echarts";
+import { useNavigate } from "react-router-dom";
+const { RangePicker } = DatePicker;
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 30 },
+    sm: { span: 5 },
+  },
+  wrapperCol: {
+    xs: { span: 30 },
+    sm: { span: 17 },
+  },
+};
 const HomeComponent = () => {
   const [progress, setProgress] = useState(70);
+  const [modal2Open, setModal2Open] = useState(false);
   const barChartRef = useRef<HTMLDivElement>(null);
   const pieChartRef = useRef<HTMLDivElement>(null);
+  const [form] = Form.useForm();
+  const variant = Form.useWatch("variant", form);
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!barChartRef.current) return;
 
@@ -68,7 +85,6 @@ const HomeComponent = () => {
     return () => barChart.dispose();
   }, []);
 
-  // Biểu đồ tròn (Pie Chart)
   useEffect(() => {
     if (!pieChartRef.current) return;
 
@@ -176,6 +192,9 @@ const HomeComponent = () => {
 
     return () => chart.dispose();
   }, []);
+  const handleClick = () => {
+    navigate("/stack");
+  };
   return (
     <div className="header-task">
       <div className="header-task-title">
@@ -245,36 +264,52 @@ const HomeComponent = () => {
         </div>
         <div className="from-item-boards">
           <div className="item-boards">
-            <div className="from-text-page">
-              <p className="txt-page">Trang “Đặt hàng” và “Cài đặt</p>
-              <div className="item-save">
-                <SdCardIcon className="icon-save" />
-                <p className="item-number">4</p>
+            <div className="item-click" onClick={handleClick}>
+              <div className="from-text-page">
+                <p className="txt-page">Trang “Đặt hàng” và “Cài đặt</p>
+                <div className="item-save">
+                  <SdCardIcon className="icon-save" />
+                  <p className="item-number">4</p>
+                </div>
               </div>
-            </div>
-            <div className="from-energy">
-              <p className="item-progress">Tiến triển</p>
-              <p className="item-progress">8/10</p>
-            </div>
-            <div className="progress-container">
-              <LinearProgress
-                variant="determinate"
-                value={progress}
-                className="custom-progress"
-              />
-            </div>
-            <div className="from-mission">
-              <button className="item-btn">Design</button>
-              <button className="item-btn">Design</button>
+              <div className="from-energy">
+                <p className="item-progress">Tiến triển</p>
+                <p className="item-progress">8/10</p>
+              </div>
+              <div className="progress-container">
+                <LinearProgress
+                  variant="determinate"
+                  value={progress}
+                  className="custom-progress"
+                />
+              </div>
+              <div className="from-mission">
+                <button className="item-btn">Design</button>
+                <button className="item-btn">Design</button>
+              </div>
             </div>
             <div className="from-member">
               <div className="from-members">
-                <div className="item-member">
-                  <img src={avatar} alt="" className="img-avt-one" />
-                  <img src={avatar} alt="" className="img-avt-true" />
-                  <p className="add-member">5+</p>
-                </div>
-                <div className="item-add">
+                <Avatar.Group
+                  max={{
+                    count: 2,
+                    style: { color: "#f56a00", backgroundColor: "#fde3cf" },
+                  }}
+                >
+                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
+                  <Avatar style={{ backgroundColor: "#f56a00" }}>K</Avatar>
+                  <Tooltip title="Ant User" placement="top">
+                    <Avatar
+                      style={{ backgroundColor: "#87d068" }}
+                      icon={<UserOutlined />}
+                    />
+                  </Tooltip>
+                  <Avatar
+                    style={{ backgroundColor: "#1677ff" }}
+                    icon={<AntDesignOutlined />}
+                  />
+                </Avatar.Group>
+                <div className="item-add" onClick={() => setModal2Open(true)}>
                   <ControlPointIcon className="icon-add" />
                 </div>
               </div>
@@ -315,12 +350,26 @@ const HomeComponent = () => {
             </div>
             <div className="from-member">
               <div className="from-members">
-                <div className="item-member">
-                  <img src={avatar} alt="" className="img-avt-one" />
-                  <img src={avatar} alt="" className="img-avt-true" />
-                  <p className="add-member">5+</p>
-                </div>
-                <div className="item-add">
+                <Avatar.Group
+                  max={{
+                    count: 2,
+                    style: { color: "#f56a00", backgroundColor: "#fde3cf" },
+                  }}
+                >
+                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
+                  <Avatar style={{ backgroundColor: "#f56a00" }}>K</Avatar>
+                  <Tooltip title="Ant User" placement="top">
+                    <Avatar
+                      style={{ backgroundColor: "#87d068" }}
+                      icon={<UserOutlined />}
+                    />
+                  </Tooltip>
+                  <Avatar
+                    style={{ backgroundColor: "#1677ff" }}
+                    icon={<AntDesignOutlined />}
+                  />
+                </Avatar.Group>
+                <div className="item-add" onClick={() => setModal2Open(true)}>
                   <ControlPointIcon className="icon-add" />
                 </div>
               </div>
@@ -361,12 +410,26 @@ const HomeComponent = () => {
             </div>
             <div className="from-member">
               <div className="from-members">
-                <div className="item-member">
-                  <img src={avatar} alt="" className="img-avt-one" />
-                  <img src={avatar} alt="" className="img-avt-true" />
-                  <p className="add-member">5+</p>
-                </div>
-                <div className="item-add">
+                <Avatar.Group
+                  max={{
+                    count: 2,
+                    style: { color: "#f56a00", backgroundColor: "#fde3cf" },
+                  }}
+                >
+                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
+                  <Avatar style={{ backgroundColor: "#f56a00" }}>K</Avatar>
+                  <Tooltip title="Ant User" placement="top">
+                    <Avatar
+                      style={{ backgroundColor: "#87d068" }}
+                      icon={<UserOutlined />}
+                    />
+                  </Tooltip>
+                  <Avatar
+                    style={{ backgroundColor: "#1677ff" }}
+                    icon={<AntDesignOutlined />}
+                  />
+                </Avatar.Group>
+                <div className="item-add" onClick={() => setModal2Open(true)}>
                   <ControlPointIcon className="icon-add" />
                 </div>
               </div>
@@ -407,12 +470,26 @@ const HomeComponent = () => {
             </div>
             <div className="from-member">
               <div className="from-members">
-                <div className="item-member">
-                  <img src={avatar} alt="" className="img-avt-one" />
-                  <img src={avatar} alt="" className="img-avt-true" />
-                  <p className="add-member">5+</p>
-                </div>
-                <div className="item-add">
+                <Avatar.Group
+                  max={{
+                    count: 2,
+                    style: { color: "#f56a00", backgroundColor: "#fde3cf" },
+                  }}
+                >
+                  <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=2" />
+                  <Avatar style={{ backgroundColor: "#f56a00" }}>K</Avatar>
+                  <Tooltip title="Ant User" placement="top">
+                    <Avatar
+                      style={{ backgroundColor: "#87d068" }}
+                      icon={<UserOutlined />}
+                    />
+                  </Tooltip>
+                  <Avatar
+                    style={{ backgroundColor: "#1677ff" }}
+                    icon={<AntDesignOutlined />}
+                  />
+                </Avatar.Group>
+                <div className="item-add" onClick={() => setModal2Open(true)}>
                   <ControlPointIcon className="icon-add" />
                 </div>
               </div>
@@ -429,6 +506,7 @@ const HomeComponent = () => {
             </div>
           </div>
         </div>
+
         <div className="from-item-chart">
           <div className="item-chart">
             <div className="from-chart">
@@ -448,6 +526,33 @@ const HomeComponent = () => {
             <div ref={chartRef} style={{ width: "500px", height: "450px" }} />
           </div>
         </div>
+        <Modal
+          title="Thêm thành viên "
+          centered
+          open={modal2Open}
+          onOk={() => setModal2Open(false)}
+          onCancel={() => setModal2Open(false)}
+        >
+          <Form form={form} {...formItemLayout} style={{ marginTop: "30px" }}>
+            <Form.Item
+              label="Nhập tên"
+              name="Input"
+              rules={[{ required: true, message: "Please input!" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Chức vụ"
+              name="Select"
+              rules={[{ required: true, message: "Please input!" }]}
+            >
+              <Select>
+                <Select.Option value="demo">Demo</Select.Option>
+                <Select.Option value="admin">Admin</Select.Option>
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     </div>
   );

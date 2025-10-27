@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import HomePage from "../pages/homePage";
 
 import HomeLayout from "../layout/headerLayout";
+import StackPage from "../pages/stack";
 const router = createBrowserRouter([
   {
     element: <HomeLayout />,
@@ -10,6 +11,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/mywork/today",
+        element: <StackPage />,
       },
     ],
   },

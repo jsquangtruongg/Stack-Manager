@@ -3,93 +3,127 @@ import {
   AppstoreOutlined,
   MailOutlined,
   SettingOutlined,
+  CalendarOutlined,
+  TeamOutlined,
+  BellOutlined,
+  QuestionCircleOutlined,
+  ProjectOutlined,
+  DashboardOutlined,
+  BarChartOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Menu } from "antd";
+import { Menu, Badge } from "antd";
+import { useNavigate } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
+const LabelWithBadge = ({ text, count }: { text: string; count?: number }) => (
+  <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+    <span>{text}</span>
+    {typeof count === "number" ? <Badge count={count} /> : null}
+  </span>
+);
 const items: MenuItem[] = [
+  { key: "dashboard", icon: <DashboardOutlined />, label: "Tổng quan" },
   {
-    key: "1",
+    key: "mywork",
     icon: <MailOutlined />,
-    label: "Navigation One",
+    label: "Công việc của tôi",
     children: [
-      { key: "11", label: "Option 1" },
-      { key: "12", label: "Option 2" },
-      { key: "13", label: "Option 3" },
-      { key: "14", label: "Option 4" },
+      { key: "my-today", label: <LabelWithBadge text="Hôm nay" count={3} /> },
+      { key: "my-assigned", label: <LabelWithBadge text="Được giao" count={8} /> },
+      { key: "my-overdue", label: <LabelWithBadge text="Quá hạn" count={1} /> },
+      { key: "my-done", label: "Đã hoàn thành" },
     ],
   },
   {
-    key: "2",
+    key: "boards-section",
+    icon: <ProjectOutlined />,
+    label: "Boards",
+    children: [
+      { key: "boards", label: "Tất cả" },
+      { key: "boards-fav", label: <LabelWithBadge text="Yêu thích" /> },
+      { key: "boards-recent", label: "Gần đây" },
+    ],
+  },
+  {
+    key: "projects-section",
     icon: <AppstoreOutlined />,
-    label: "Navigation Two",
+    label: "Projects",
     children: [
-      { key: "21", label: "Option 1" },
-      { key: "22", label: "Option 2" },
-      {
-        key: "23",
-        label: "Submenu",
-        children: [
-          { key: "231", label: "Option 1" },
-          { key: "232", label: "Option 2" },
-          { key: "233", label: "Option 3" },
-        ],
-      },
-      {
-        key: "24",
-        label: "Submenu 2",
-        children: [
-          { key: "241", label: "Option 1" },
-          { key: "242", label: "Option 2" },
-          { key: "243", label: "Option 3" },
-        ],
-      },
+      { key: "projects", label: "Tất cả dự án" },
+      { key: "backlog", label: "Backlog" },
+      { key: "sprints", label: "Sprints" },
+      { key: "kanban", label: "Kanban" },
+    ],
+  },
+  { key: "calendar", icon: <CalendarOutlined />, label: "Lịch/Timeline" },
+  {
+    key: "reports-section",
+    icon: <BarChartOutlined />,
+    label: "Báo cáo",
+    children: [
+      { key: "reports-progress", label: "Tiến độ" },
+      { key: "reports-workload", label: "Workload" },
+      { key: "reports-velocity", label: "Velocity" },
     ],
   },
   {
-    key: "3",
-    icon: <SettingOutlined />,
-    label: "Navigation Three",
+    key: "team-section",
+    icon: <TeamOutlined />,
+    label: "Đội nhóm",
     children: [
-      { key: "31", label: "Option 1" },
-      { key: "32", label: "Option 2" },
-      { key: "33", label: "Option 3" },
-      { key: "34", label: "Option 4" },
+      { key: "team", label: "Thành viên" },
+      { key: "team-invite", label: "Mời" },
+      { key: "roles", label: "Vai trò & Quyền" },
     ],
   },
+  {
+    key: "notifications",
+    icon: <BellOutlined />,
+    label: <LabelWithBadge text="Thông báo" count={5} />,
+  },
+  {
+    key: "settings-section",
+    icon: <SettingOutlined />,
+    label: "Cài đặt",
+    children: [
+      { key: "settings", label: "Cài đặt chung" },
+      { key: "theme", label: "Giao diện" },
+      { key: "integrations", label: "Tích hợp" },
+    ],
+  },
+  { key: "help", icon: <QuestionCircleOutlined />, label: "Hỗ trợ" },
 ];
 
 interface LevelKeysProps {
   key?: string;
   children?: LevelKeysProps[];
 }
-
 const getLevelKeys = (items1: LevelKeysProps[]) => {
   const key: Record<string, number> = {};
   const func = (items2: LevelKeysProps[], level = 1) => {
     items2.forEach((item) => {
-      if (item.key) {
-        key[item.key] = level;
-      }
-      if (item.children) {
-        func(item.children, level + 1);
-      }
+      if (item.key) key[item.key] = level;
+      if (item.children) func(item.children, level + 1);
     });
   };
   func(items1);
   return key;
 };
-
 const levelKeys = getLevelKeys(items as LevelKeysProps[]);
 
+// Component SiderLayout
 const SiderLayout = () => {
-  const [stateOpenKeys, setStateOpenKeys] = useState(["2", "23"]);
+  const navigate = useNavigate();
+
+  const [stateOpenKeys, setStateOpenKeys] = useState<string[]>([
+    "mywork",
+    "projects-section",
+  ]);
 
   const onOpenChange: MenuProps["onOpenChange"] = (openKeys) => {
     const currentOpenKey = openKeys.find((key) => !stateOpenKeys.includes(key));
-    // open
     if (currentOpenKey !== undefined) {
       const repeatIndex = openKeys
         .filter((key) => key !== currentOpenKey)
@@ -97,25 +131,49 @@ const SiderLayout = () => {
 
       setStateOpenKeys(
         openKeys
-          // remove repeat key
           .filter((_, index) => index !== repeatIndex)
-          // remove current level all child
           .filter((key) => levelKeys[key] <= levelKeys[currentOpenKey])
       );
     } else {
-      // close
       setStateOpenKeys(openKeys);
+    }
+  };
+
+  const handleClick: MenuProps["onClick"] = (e) => {
+    // chỉ item mới trigger onClick; submenu title không trigger
+    switch (e.key) {
+      case "dashboard":
+        navigate("/");
+        break;
+      case "my-today":
+        navigate("/mywork/today");
+        break;
+      case "my-assigned":
+        navigate("/mywork/assigned");
+        break;
+      case "my-overdue":
+        navigate("/mywork/overdue");
+        break;
+      case "my-done":
+        navigate("/mywork/done");
+        break;
+      case "boards":
+        navigate("/boards");
+        break;
+      default:
+        break;
     }
   };
 
   return (
     <Menu
       mode="inline"
-      defaultSelectedKeys={["231"]}
+      defaultSelectedKeys={["dashboard"]}
       openKeys={stateOpenKeys}
       onOpenChange={onOpenChange}
-      style={{ width: 300}}
+      style={{ width: 300 }}
       items={items}
+      onClick={handleClick}
     />
   );
 };
