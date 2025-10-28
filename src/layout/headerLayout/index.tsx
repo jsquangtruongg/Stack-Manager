@@ -1,5 +1,4 @@
 import "./style.scss";
-import avatar from "../../assets/images/avatar.jpg";
 import CreateIcon from "@mui/icons-material/Create";
 import SiderLayout from "../siderLayout";
 import { UserOutlined } from "@ant-design/icons";

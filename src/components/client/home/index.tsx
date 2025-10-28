@@ -1,5 +1,4 @@
 import "./style.scss";
-import CreateIcon from "@mui/icons-material/Create";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import AppsIcon from "@mui/icons-material/Apps";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -193,7 +192,7 @@ const HomeComponent = () => {
     return () => chart.dispose();
   }, []);
   const handleClick = () => {
-    navigate("/stack");
+    navigate("/word-stack");
   };
   return (
     <div className="header-task">

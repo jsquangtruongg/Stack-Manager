@@ -8,13 +8,34 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import SortIcon from "@mui/icons-material/Sort";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import { Modal, Input, Form, Select, DatePicker, Avatar, Tooltip } from "antd";
+import type { MenuProps } from "antd";
+import {
+  Modal,
+  Input,
+  Form,
+  Select,
+  DatePicker,
+  Avatar,
+  Tooltip,
+  Space,
+  Button,
+  Divider,
+  message,
+  Dropdown,
+} from "antd";
 
 import "./style.scss";
 import {
   AntDesignOutlined,
+  CopyOutlined,
+  DeleteOutlined,
+  EditOutlined,
   ExceptionOutlined,
   FileAddOutlined,
+  MessageOutlined,
+  MoreOutlined,
+  PlusOutlined,
+  ShareAltOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -33,7 +54,39 @@ const formItemLayout = {
 const StackComponent = () => {
   const [modal2Open, setModal2Open] = useState(false);
   const [form] = Form.useForm();
+  const actionItems: MenuProps["items"] = [
+    { key: "share", label: "Chia sẻ", icon: <ShareAltOutlined /> },
+    { key: "edit", label: "Chỉnh sửa", icon: <EditOutlined /> },
+    { key: "duplicate", label: "Nhân bản", icon: <CopyOutlined /> },
+    { type: "divider" },
+    { key: "delete", label: "Xóa", icon: <DeleteOutlined />, danger: true },
+  ];
 
+  const onActionClick: MenuProps["onClick"] = ({ key }) => {
+    switch (key) {
+      case "share":
+        message.info("Mở popup chia sẻ");
+        break;
+      case "edit":
+        message.info("Mở form chỉnh sửa");
+        break;
+      case "duplicate":
+        message.success("Đã nhân bản mục");
+        break;
+      case "delete":
+        Modal.confirm({
+          title: "Xóa mục này?",
+          content: "Hành động không thể hoàn tác.",
+          okText: "Xóa",
+          okButtonProps: { danger: true },
+          cancelText: "Hủy",
+          onOk: () => message.success("Đã xóa"),
+        });
+        break;
+      default:
+        break;
+    }
+  };
   return (
     <div className="header-task">
       <div className="header-task-item">
@@ -114,6 +167,67 @@ const StackComponent = () => {
           <div className="item-err" onClick={() => setModal2Open(true)}>
             <FileAddOutlined className="icon-err" />
             <p className="txt-err">Thêm Stack</p>
+          </div>
+        </div>
+        <div className="stack">
+          <div className="item-stack">
+            <div className="form-item-stack">
+              <h2 className="txt-stack-title">Thiết kế UI/UX</h2>
+              <div className="item-tack">
+                <Dropdown
+                  placement="bottomRight"
+                  trigger={["click"]}
+                  menu={{ items: actionItems, onClick: onActionClick }}
+                >
+                  <Button
+                    type="text"
+                    className="item-actions"
+                    icon={<MoreOutlined />}
+                    aria-label="Tùy chọn"
+                  />
+                </Dropdown>
+              </div>
+
+              <div className="from-function">
+                <Space size="middle" className="actions-left">
+                  <Tooltip title="Tạo thẻ mới">
+                    <Button
+                      type="primary"
+                      className="action-btn"
+                      icon={<PlusOutlined />}
+                    >
+                      Thêm
+                    </Button>
+                  </Tooltip>
+
+                  <Tooltip title="Thêm bình luận">
+                    <Button className="action-btn" icon={<MessageOutlined />}>
+                      Hoàn thành
+                    </Button>
+                  </Tooltip>
+
+                  <Tooltip title="Xóa mục đã chọn">
+                    <Button
+                      danger
+                      className="action-btn"
+                      icon={<DeleteOutlined />}
+                    >
+                      Xóa
+                    </Button>
+                  </Tooltip>
+                </Space>
+                <Divider type="vertical" className="actions-divider" />
+                <Space className="actions-right">
+                  <Tooltip title="Tác vụ khác">
+                    <Button
+                      type="text"
+                      className="action-btn more-btn"
+                      icon={<MoreOutlined />}
+                    />
+                  </Tooltip>
+                </Space>
+              </div>
+            </div>
           </div>
         </div>
       </div>

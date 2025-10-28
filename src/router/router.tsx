@@ -3,6 +3,7 @@ import HomePage from "../pages/homePage";
 
 import HomeLayout from "../layout/headerLayout";
 import StackPage from "../pages/stack";
+import WordStackPage from "../pages/wordStack";
 const router = createBrowserRouter([
   {
     element: <HomeLayout />,
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path: "/mywork/today",
         element: <StackPage />,
+      },
+      {
+        path: "/word-stack",
+        element: <WordStackPage />,
       },
     ],
   },
