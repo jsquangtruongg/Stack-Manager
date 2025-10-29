@@ -15,8 +15,25 @@ import { LinearProgress } from "@mui/material";
 import SimCardIcon from "@mui/icons-material/SimCard";
 import MessageIcon from "@mui/icons-material/Message";
 import { useEffect, useRef, useState } from "react";
-import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
-import { Modal, Input, Form, Select, DatePicker, Avatar, Tooltip } from "antd";
+import {
+  AntDesignOutlined,
+  MoreOutlined,
+  PlusOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import {
+  Modal,
+  Input,
+  Form,
+  Select,
+  DatePicker,
+  Avatar,
+  Tooltip,
+  MenuProps,
+  Dropdown,
+  Button,
+  message,
+} from "antd";
 import * as echarts from "echarts";
 import { useNavigate } from "react-router-dom";
 const { RangePicker } = DatePicker;
@@ -34,6 +51,8 @@ const formItemLayout = {
 const HomeComponent = () => {
   const [progress, setProgress] = useState(70);
   const [modal2Open, setModal2Open] = useState(false);
+  const [addStackOpen, setAddStackOpen] = useState(false);
+  const [addStackForm] = Form.useForm();
   const barChartRef = useRef<HTMLDivElement>(null);
   const pieChartRef = useRef<HTMLDivElement>(null);
   const [form] = Form.useForm();
@@ -192,7 +211,24 @@ const HomeComponent = () => {
     return () => chart.dispose();
   }, []);
   const handleClick = () => {
-    navigate("/word-stack");
+    navigate("/mywork/today");
+  };
+  const actionItems: MenuProps["items"] = [
+    { key: "add-stack", label: "Thêm Stack", icon: <PlusOutlined /> },
+  ];
+  const onActionClick: MenuProps["onClick"] = ({ key }) => {
+    if (key === "add-stack") {
+      setAddStackOpen(true);
+    }
+  };
+
+  const handleAddStackSubmit = (values: {
+    name: string;
+    description?: string;
+  }) => {
+    message.success(`Đã thêm stack: ${values.name}`);
+    setAddStackOpen(false);
+    addStackForm.resetFields();
   };
   return (
     <div className="header-task">
@@ -257,8 +293,19 @@ const HomeComponent = () => {
             <p className="text-backlog">Nhiệm vụ</p>
             <p className="item-backlog">5</p>
           </div>
-          <div className="MoreHoriz-icon">
-            <MoreHorizIcon className="icon-item" />
+          <div className="item-tack">
+            <Dropdown
+              placement="bottomRight"
+              trigger={["click"]}
+              menu={{ items: actionItems, onClick: onActionClick }}
+            >
+              <Button
+                type="text"
+                className="item-actions"
+                icon={<MoreOutlined />}
+                aria-label="Tùy chọn"
+              />
+            </Dropdown>
           </div>
         </div>
         <div className="from-item-boards">
@@ -549,6 +596,35 @@ const HomeComponent = () => {
                 <Select.Option value="demo">Demo</Select.Option>
                 <Select.Option value="admin">Admin</Select.Option>
               </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Modal
+          title="Thêm Stack"
+          open={addStackOpen}
+          onCancel={() => setAddStackOpen(false)}
+          onOk={() => addStackForm.submit()}
+          okText="Thêm"
+        >
+          <Form
+            form={addStackForm}
+            layout="vertical"
+            onFinish={handleAddStackSubmit}
+          >
+            <Form.Item
+              name="name"
+              label="Tên stack"
+              rules={[{ required: true, message: "Vui lòng nhập tên stack" }]}
+            >
+              <Input placeholder="Ví dụ: Sprint Q4" />
+            </Form.Item>
+
+            <Form.Item
+              name="description"
+              label="Mô tả"
+              rules={[{ max: 255, message: "Tối đa 255 ký tự" }]}
+            >
+              <Input.TextArea rows={3} placeholder="Mô tả ngắn cho stack" />
             </Form.Item>
           </Form>
         </Modal>

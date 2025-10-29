@@ -4,7 +4,7 @@ import {
   MailOutlined,
   LockOutlined,
   GooglePlusOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 
@@ -157,7 +157,7 @@ const RegisterComponent = () => {
               block
               loading={loading}
             >
-              Đăng nhập
+              Đăng Ký
             </Button>
           </Form.Item>
 
@@ -170,7 +170,7 @@ const RegisterComponent = () => {
             block
             onClick={onGoogleLogin}
           >
-            Đăng nhập bằng Google
+            Đăng Ký bằng Google
           </Button>
         </Form>
       </div>

@@ -200,9 +200,9 @@ const StackComponent = () => {
                     </Button>
                   </Tooltip>
 
-                  <Tooltip title="Hoàn thành">
+                  <Tooltip title="Bình luận">
                     <Button className="action-btn" icon={<MessageOutlined />}>
-                      Hoàn thành
+                      Bình luận
                     </Button>
                   </Tooltip>
 
