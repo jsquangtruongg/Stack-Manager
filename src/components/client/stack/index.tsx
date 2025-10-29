@@ -1,7 +1,6 @@
 import AppsIcon from "@mui/icons-material/Apps";
 import MenuIcon from "@mui/icons-material/Menu";
-import LockIcon from "@mui/icons-material/Lock";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import SearchIcon from "@mui/icons-material/Search";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -30,17 +29,16 @@ import {
   CopyOutlined,
   DeleteOutlined,
   EditOutlined,
-  ExceptionOutlined,
   FileAddOutlined,
   MessageOutlined,
   MoreOutlined,
   PlusOutlined,
   ShareAltOutlined,
   UserOutlined,
+  SendOutlined,
 } from "@ant-design/icons";
-
-const { TextArea } = Input;
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import TextArea from "antd/es/input/TextArea";
 const formItemLayout = {
   labelCol: {
     xs: { span: 30 },
@@ -86,6 +84,72 @@ const StackComponent = () => {
       default:
         break;
     }
+  };
+  const [addStackOpen, setAddStackOpen] = useState(false);
+  const [addStackForm] = Form.useForm();
+
+  const [commentOpen, setCommentOpen] = useState(false);
+  const [commentForm] = Form.useForm();
+
+  const [messages, setMessages] = useState<
+    {
+      id: number;
+      author: string;
+      content: string;
+      createdAt: string;
+      isMe?: boolean;
+    }[]
+  >([
+    {
+      id: 1,
+      author: "Admin",
+      content: "Chào mừng tới dự án!",
+      createdAt: "09:00",
+      isMe: false,
+    },
+    {
+      id: 2,
+      author: "Bạn",
+      content: "OK, mình sẽ cập nhật task.",
+      createdAt: "10:15",
+      isMe: true,
+    },
+  ]);
+  const chatBodyRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [commentOpen, messages]);
+
+  const handleSendComment = (values: { content: string }) => {
+    const content = values.content?.trim();
+    if (!content) {
+      message.warning("Vui lòng nhập nội dung");
+      return;
+    }
+    const nextId = messages.length ? messages[messages.length - 1].id + 1 : 1;
+    setMessages([
+      ...messages,
+      {
+        id: nextId,
+        author: "Bạn",
+        content,
+        createdAt: new Date().toLocaleTimeString(),
+        isMe: true,
+      },
+    ]);
+    commentForm.resetFields();
+  };
+
+  const handleAddStackSubmit = (values: {
+    name: string;
+    description?: string;
+  }) => {
+    message.success(`Đã thêm stack: ${values.name}`);
+    setAddStackOpen(false);
+    addStackForm.resetFields();
   };
   return (
     <div className="header-task">
@@ -195,13 +259,18 @@ const StackComponent = () => {
                       type="primary"
                       className="action-btn"
                       icon={<PlusOutlined />}
+                      onClick={() => setAddStackOpen(true)}
                     >
                       Thêm
                     </Button>
                   </Tooltip>
 
                   <Tooltip title="Bình luận">
-                    <Button className="action-btn" icon={<MessageOutlined />}>
+                    <Button
+                      className="action-btn"
+                      icon={<MessageOutlined />}
+                      onClick={() => setCommentOpen(true)}
+                    >
                       Bình luận
                     </Button>
                   </Tooltip>
@@ -231,44 +300,138 @@ const StackComponent = () => {
           </div>
         </div>
       </div>
-      <Modal
-        title="Thêm Stack"
-        className="modal-stack"
-        style={{ textAlign: "center" }}
-        centered
-        open={modal2Open}
-        onOk={() => setModal2Open(false)}
-        onCancel={() => setModal2Open(false)}
-      >
-        <Form form={form} {...formItemLayout} style={{ marginTop: "30px" }}>
-          <Form.Item
-            label="Nhập tiêu đề"
-            name="Input"
-            rules={[{ required: true, message: "Please input!" }]}
+      <div className="modal-stack">
+        <Modal
+          title="Thêm Stack"
+          className="modal-stack"
+          style={{ textAlign: "center" }}
+          centered
+          open={modal2Open}
+          onOk={() => setModal2Open(false)}
+          onCancel={() => setModal2Open(false)}
+        >
+          <Form form={form} {...formItemLayout} style={{ marginTop: "30px" }}>
+            <Form.Item
+              label="Nhập tiêu đề"
+              name="Input"
+              rules={[{ required: true, message: "Please input!" }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Thành viên"
+              name="Select"
+              rules={[{ required: true, message: "Please input!" }]}
+            >
+              <Select mode="multiple">
+                <Select.Option value="demo">Demo</Select.Option>
+                <Select.Option value="admin">Admin</Select.Option>
+                <Select.Option value="user">User</Select.Option>
+                <Select.Option value="guest">Guest</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Nhập mô tả"
+              name="TextArea"
+              rules={[{ required: true, message: "Please input!" }]}
+            >
+              <TextArea rows={4} />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+      <div className="modal-stack">
+        <Modal
+          title="Thêm Stack"
+          open={addStackOpen}
+          onCancel={() => setAddStackOpen(false)}
+          onOk={() => addStackForm.submit()}
+          okText="Thêm"
+        >
+          <Form
+            form={addStackForm}
+            layout="vertical"
+            onFinish={handleAddStackSubmit}
           >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Thành viên"
-            name="Select"
-            rules={[{ required: true, message: "Please input!" }]}
+            <Form.Item
+              name="name"
+              label="Tên stack"
+              rules={[{ required: true, message: "Vui lòng nhập tên stack" }]}
+            >
+              <Input placeholder="Ví dụ: Sprint Q4" />
+            </Form.Item>
+
+            <Form.Item
+              name="description"
+              label="Mô tả"
+              rules={[{ max: 255, message: "Tối đa 255 ký tự" }]}
+            >
+              <Input.TextArea rows={3} placeholder="Mô tả ngắn cho stack" />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+      <div className="modal-stack">
+        <Modal
+          title="Bình luận"
+          className="chat-modal"
+          open={commentOpen}
+          onCancel={() => setCommentOpen(false)}
+          footer={null}
+        >
+          <div className="chat-body" ref={chatBodyRef}>
+            {messages.map((m) => (
+              <div key={m.id} className={`message ${m.isMe ? "me" : "other"}`}>
+                <Avatar
+                  size={32}
+                  style={{ backgroundColor: m.isMe ? "#1677ff" : "#87d068" }}
+                  icon={<UserOutlined />}
+                />
+                <div className="bubble">
+                  <div className="meta">
+                    <span className="author">{m.author}</span>
+                    <span className="time">{m.createdAt}</span>
+                  </div>
+                  <div className="content">{m.content}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <Form
+            form={commentForm}
+            className="chat-input"
+            onFinish={handleSendComment}
           >
-            <Select mode="multiple">
-              <Select.Option value="demo">Demo</Select.Option>
-              <Select.Option value="admin">Admin</Select.Option>
-              <Select.Option value="user">User</Select.Option>
-              <Select.Option value="guest">Guest</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="Nhập mô tả"
-            name="TextArea"
-            rules={[{ required: true, message: "Please input!" }]}
-          >
-            <TextArea rows={4} />
-          </Form.Item>
-        </Form>
-      </Modal>
+            <Form.Item
+              name="content"
+              noStyle
+              rules={[
+                { required: true, message: "Vui lòng nhập nội dung" },
+                { max: 500, message: "Tối đa 500 ký tự" },
+              ]}
+            >
+              <Input.TextArea
+                autoSize={{ minRows: 1, maxRows: 4 }}
+                placeholder="Nhập bình luận... (Enter để gửi, Shift+Enter xuống dòng)"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    commentForm.submit();
+                  }
+                }}
+              />
+            </Form.Item>
+            <Button
+              type="primary"
+              icon={<SendOutlined />}
+              onClick={() => commentForm.submit()}
+            >
+              Gửi
+            </Button>
+          </Form>
+        </Modal>
+      </div>
     </div>
   );
 };
