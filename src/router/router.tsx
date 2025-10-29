@@ -4,6 +4,9 @@ import HomePage from "../pages/homePage";
 import HomeLayout from "../layout/headerLayout";
 import StackPage from "../pages/stack";
 import WordStackPage from "../pages/wordStack";
+import AuthPage from "../pages/authPage";
+import LoginPage from "../pages/loginPage";
+import RegisterPage from "../pages/registerPage";
 const router = createBrowserRouter([
   {
     element: <HomeLayout />,
@@ -20,6 +23,20 @@ const router = createBrowserRouter([
       {
         path: "/word-stack",
         element: <WordStackPage />,
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <AuthPage />,
+    children: [
+      {
+        path: "/auth/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/auth/register",
+        element: <RegisterPage />,
       },
     ],
   },
