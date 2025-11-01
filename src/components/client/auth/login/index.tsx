@@ -5,17 +5,13 @@ import {
   LockOutlined,
   GooglePlusOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../redux/store";
 import { loginAction } from "../../../../redux/actions/auth";
 const LoginComponent = () => {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handleSubmit = async (values: { email: string; password: string }) => {
-    console.log("🔹 Form values gửi đi:", values);
-    setLoading(true);
 
     try {
       const result = await dispatch(
@@ -29,7 +25,6 @@ const LoginComponent = () => {
       console.error("❌ Lỗi đăng nhập:", err);
       message.error(err?.response?.data?.message || "Đăng nhập thất bại");
     } finally {
-      setLoading(false);
       console.log("⏹ Kết thúc handleSubmit");
     }
   };

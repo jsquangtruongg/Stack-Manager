@@ -21,17 +21,14 @@ import {
   Space,
   Tabs,
   Typography,
+  type MenuProps,
 } from "antd";
-import type { MenuProps } from "antd";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/store";
 import { setUser } from "../../redux/actions/userAction";
-import { useAuth } from "../../hook/useAuth";
 const BoardsComponent = () => {
   const userState = useAppSelector((state) => state.user);
-  const { removeUser } = useAuth();
-  const navigate = useNavigate();
 
   console.log(userState.userData);
   const [openKeys, setOpenKeys] = useState<string[]>([]);
@@ -40,15 +37,10 @@ const BoardsComponent = () => {
     setOpenKeys(keys);
   };
   const userRoleId = 1;
-  const handleLogout = () => {
-    localStorage.removeItem("profile");
-    removeUser();
-    navigate("/");
-  };
   useEffect(() => {
     dispatch(setUser());
   }, []);
-  const { Header, Sider, Content } = Layout;
+  const { Header } = Layout;
   const tabItems = [
     { key: "time1", label: "Thời Gian" },
     { key: "time2", label: "Thời Gian" },
@@ -60,7 +52,12 @@ const BoardsComponent = () => {
     <>
       <Layout className="header-boards">
         <Header className="header-nav">
-          <Row align="middle" justify="space-between" gutter={16} className="header-nav-content">
+          <Row
+            align="middle"
+            justify="space-between"
+            gutter={16}
+            className="header-nav-content"
+          >
             <Col>
               <Space size="middle" align="center">
                 <Typography.Text className="text-boards">
@@ -134,7 +131,6 @@ const BoardsComponent = () => {
                 <Menu.Item
                   key="logout"
                   icon={<LogoutOutlined />}
-                  onClick={handleLogout}
                   danger
                 >
                   Đăng xuất

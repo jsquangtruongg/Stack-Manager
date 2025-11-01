@@ -1,4 +1,4 @@
-import { PayloadAction } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import * as types from "../constants/authConstants";
 
 export interface IUserData {

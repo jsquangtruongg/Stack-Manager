@@ -1,5 +1,5 @@
 import "./style.scss";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {
   AntDesignOutlined,
   MoreOutlined,
@@ -55,14 +55,8 @@ const HomeComponent = () => {
   const [addStackOpen, setAddStackOpen] = useState(false);
   const [addStackForm] = Form.useForm();
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const LOADING_DELAY_MS = 1000;
-    const timer = setTimeout(() => setLoading(false), LOADING_DELAY_MS);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleClick = () => {
     navigate("/mywork/today");

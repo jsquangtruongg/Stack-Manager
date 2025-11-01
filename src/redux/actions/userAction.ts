@@ -11,7 +11,7 @@ export const setUser = () => async (dispatch: AppDispatch) => {
       payload: { userData },
     });
   } catch (error) {
-    localStorage.removeItem("profile");
+    localStorage.removeItem("profile")              ;
   }
 };
 

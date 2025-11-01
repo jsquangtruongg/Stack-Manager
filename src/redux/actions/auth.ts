@@ -3,27 +3,12 @@ import { setError } from "./globalAction";
 import type { AppDispatch } from "../store";
 import { login } from "../../api/auth";
 import * as types from "../constants/authConstants";
-import { setUser } from "./userAction";
 interface IAuthUser {
   email: string;
   password: string;
 }
 
-interface IUser {
-  id: number;
-  full_name: string;
-  email: string;
-  avatar?: string;
-  permissions?: string[];
-}
 
-interface ISignInResponse {
-  message: string;
-  accessToken: string;
-  refreshToken?: string;
-  expiresIn?: number;
-  user?: IUser | null;
-}
 export const loginAction =
   (data: Pick<IAuthUser, "email" | "password">, navigate: NavigateFunction) =>
   async (dispatch: AppDispatch) => {

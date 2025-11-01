@@ -1,5 +1,8 @@
-import axios from "axios";
-import type { AxiosResponse, InternalAxiosRequestConfig, AxiosError } from "axios";
+import axios, {
+  AxiosError,
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from "axios";
 export const API = axios.create({
   baseURL: "http://localhost:8080",
 });

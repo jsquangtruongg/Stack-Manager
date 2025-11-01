@@ -6,29 +6,8 @@ import {
   GooglePlusOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
 
 const RegisterComponent = () => {
-  const [loading, setLoading] = useState(false);
-
-  const onFinish = async (values: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    remember?: boolean;
-  }) => {
-    setLoading(true);
-    try {
-      message.success("Đăng nhập thành công (demo)");
-    } catch (e) {
-      message.error("Đăng nhập thất bại");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const onGoogleLogin = () => {
     message.info("Đăng nhập Google đang được cấu hình");
   };
@@ -37,12 +16,7 @@ const RegisterComponent = () => {
     <div className="auth-login">
       <div className="auth-login-content">
         <h2 className="txt-title">Đăng Ký</h2>
-        <Form
-          name="login"
-          layout="vertical"
-          onFinish={onFinish}
-          autoComplete="off"
-        >
+        <Form name="login" layout="vertical" autoComplete="off">
           {/* Nhóm Họ + Tên */}
           <div className="name-group">
             <Form.Item
@@ -150,13 +124,7 @@ const RegisterComponent = () => {
           </div>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              size="large"
-              block
-              loading={loading}
-            >
+            <Button type="primary" htmlType="submit" size="large" block>
               Đăng Ký
             </Button>
           </Form.Item>
