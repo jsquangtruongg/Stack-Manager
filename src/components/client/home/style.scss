@@ -633,7 +633,7 @@
   align-items: center;
   justify-content: space-between;
   perspective: 500px;
-  animation: slideDown 0.6s ease-out; 
+  animation: slideDown 0.6s ease-out;
 }
 
 .txt-view-boards {
@@ -739,6 +739,7 @@
     color: #7a8699;
   }
   .item-click {
+    margin-right: 5px;
     border-radius: 10px;
     width: 50px;
     background-color: #fff;

@@ -13,7 +13,6 @@ import {
   Input,
   Form,
   Select,
-  DatePicker,
   Avatar,
   Tooltip,
   Space,
@@ -269,6 +268,11 @@ function StackComponent() {
                 <ControlPointIcon className="icon-add" />
               </div>
             </div>
+
+            <button className="btn-add">
+              <PlusOutlined />
+              Thêm stack
+            </button>
           </div>
           <div className="from-task">
             <div className="item-err" onClick={() => setModal2Open(true)}>
@@ -453,7 +457,7 @@ function StackComponent() {
         </div>
         <div className="modal-stack">
           <Modal
-            title="Thêm Stack"
+            title="Thêm Thành Viên"
             className="modal-stack"
             style={{ textAlign: "center" }}
             centered
@@ -493,7 +497,7 @@ function StackComponent() {
         </div>
         <div className="modal-stack">
           <Modal
-            title="Thêm Stack"
+            title="Thêm tack"
             open={addStackOpen}
             onCancel={() => setAddStackOpen(false)}
             onOk={() => addStackForm.submit()}

@@ -1,7 +1,7 @@
 import * as types from "../constants/authConstants";
-import { AppDispatch } from "../store";
+import type { AppDispatch } from "../store";
 import { getUserAPI } from "../../api/user";
-import { IUserData } from "../reducers/user";
+import type { IUserData } from "../reducers/user";
 
 export const setUser = () => async (dispatch: AppDispatch) => {
   try {

@@ -1,5 +1,5 @@
 import "./style.scss";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AntDesignOutlined,
   MoreOutlined,
@@ -25,7 +25,7 @@ import {
   Select,
   Avatar,
   Tooltip,
-  MenuProps,
+  type MenuProps,
   Dropdown,
   Button,
   message,
@@ -50,7 +50,7 @@ const formItemLayout = {
   },
 };
 const HomeComponent = () => {
-  const [progress, setProgress] = useState(70);
+  const [progress] = useState(70);
   const [modal2Open, setModal2Open] = useState(false);
   const [addStackOpen, setAddStackOpen] = useState(false);
   const [addStackForm] = Form.useForm();

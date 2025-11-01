@@ -1,6 +1,6 @@
-import { NavigateFunction } from "react-router-dom";
+import type { NavigateFunction } from "react-router-dom";
 import { setError } from "./globalAction";
-import { AppDispatch } from "../store";
+import type { AppDispatch } from "../store";
 import { login } from "../../api/auth";
 import * as types from "../constants/authConstants";
 import { setUser } from "./userAction";

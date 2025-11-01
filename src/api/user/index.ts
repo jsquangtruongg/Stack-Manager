@@ -1,4 +1,4 @@
-import { IUserData } from "../../redux/reducers/user";
+import type { IUserData } from "../../redux/reducers/user";
 import { API } from "../config";
 export type IResponse = {
   userData: IUserData;

@@ -15,15 +15,14 @@ import {
   Avatar,
   Badge,
   Col,
-  Dropdown,
   Layout,
   Menu,
-  MenuProps,
   Row,
   Space,
   Tabs,
   Typography,
 } from "antd";
+import type { MenuProps } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/store";
@@ -31,7 +30,7 @@ import { setUser } from "../../redux/actions/userAction";
 import { useAuth } from "../../hook/useAuth";
 const BoardsComponent = () => {
   const userState = useAppSelector((state) => state.user);
-  const { user, removeUser } = useAuth();
+  const { removeUser } = useAuth();
   const navigate = useNavigate();
 
   console.log(userState.userData);
