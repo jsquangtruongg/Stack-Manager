@@ -31,7 +31,10 @@ const items: MenuItem[] = [
     label: "Công việc của tôi",
     children: [
       { key: "my-today", label: <LabelWithBadge text="Hôm nay" count={3} /> },
-      { key: "my-assigned", label: <LabelWithBadge text="Được giao" count={8} /> },
+      {
+        key: "my-assigned",
+        label: <LabelWithBadge text="Được giao" count={8} />,
+      },
       { key: "my-overdue", label: <LabelWithBadge text="Quá hạn" count={1} /> },
       { key: "my-done", label: "Đã hoàn thành" },
     ],
@@ -140,7 +143,6 @@ const SiderLayout = () => {
   };
 
   const handleClick: MenuProps["onClick"] = (e) => {
-    // chỉ item mới trigger onClick; submenu title không trigger
     switch (e.key) {
       case "dashboard":
         navigate("/");
@@ -149,7 +151,7 @@ const SiderLayout = () => {
         navigate("/mywork/today");
         break;
       case "my-assigned":
-        navigate("/mywork/assigned");
+        navigate("/assigned");
         break;
       case "my-overdue":
         navigate("/mywork/overdue");

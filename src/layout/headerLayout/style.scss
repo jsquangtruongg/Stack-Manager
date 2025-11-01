@@ -20,6 +20,19 @@
     align-items: center;
     height: 70px;
     background-color: #f3f2f7;
+    .header-nav-content {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .ant-tabs-nav {
+      margin: 0px !important;
+    }
+    .header-nav-tabs {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
     .from-text-boards {
       display: flex;
       align-items: center;

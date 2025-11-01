@@ -244,28 +244,6 @@
           transform: translateY(0);
         }
       }
-      .from-function {
-        margin-left: 10px;
-        width: 220px;
-        justify-content: space-between;
-        height: 50px;
-        display: flex;
-        animation: slideDown 0.6s ease-out;
-
-        .icon-add {
-          color: #7a8699;
-        }
-        .item-click {
-          border-radius: 10px;
-          width: 50px;
-          background-color: #fff;
-          border: 1px solid #e7e7e7;
-          height: 50px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      }
 
       .from-members {
         animation: slideIn 0.6s ease-out;
@@ -392,6 +370,45 @@
             justify-content: center;
             position: relative;
             padding-right: 48px;
+            padding: 8px 0;
+
+            .task-row {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 12px;
+            }
+
+            .task-left {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              .task-title {
+                font-weight: 600;
+                color: #1f1f1f;
+              }
+
+              .task-badges {
+                .ant-tag {
+                  margin-top: 4px;
+                }
+              }
+            }
+
+            .task-right {
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+
+              .task-progress {
+                width: 120px;
+              }
+
+              .ant-btn {
+                padding: 0 8px;
+              }
+            }
 
             .item-actions {
               position: absolute;
@@ -466,7 +483,7 @@
   .ant-modal-body {
     display: flex;
     flex-direction: column;
-    padding: 0; // để tự thiết kế khung chat
+    padding: 0; // để tự thiết kếu khung chat
   }
 }
 
@@ -503,7 +520,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 8px 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 .meta {
@@ -519,7 +536,107 @@
     font-weight: 400;
   }
 }
+.divider-stack {
+  margin: 5px 0px;
+}
+.chat-input {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #f0f0f0;
+  background: #fff;
 
+  .ant-input {
+    border-radius: 8px;
+  }
+}
+.stack-card {
+  height: 500px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  position: relative;
+  display: flex; // để body chiếm phần còn lại
+  flex-direction: column; // header ở trên, body phía dưới
+
+  .ant-card-head {
+    padding: 12px 16px;
+
+    .ant-card-head-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .txt-stack-title {
+        font-weight: 600;
+        font-size: 16px;
+        color: #1f1f1f;
+      }
+    }
+  }
+
+  .txt-stack-desc {
+    margin-bottom: 12px;
+    color: #595959;
+  }
+
+  .stack-meta {
+    margin-bottom: 12px;
+
+    .meta-progress {
+      width: 140px;
+    }
+  }
+
+  .task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    .task-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      .task-title {
+        font-weight: 600;
+        color: #1f1f1f;
+      }
+    }
+
+    .task-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      .ant-btn {
+        padding: 0 8px;
+      }
+    }
+  }
+
+  .stack-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stack-actions {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px; // sát mép dưới khung, đổi 0 nếu muốn sát hoàn toàn
+    display: flex;
+    justify-content: flex-start;
+
+    .action-btn {
+      min-width: 90px;
+    }
+  }
+}
 .chat-input {
   display: flex;
   gap: 8px;

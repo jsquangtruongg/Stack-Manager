@@ -7,6 +7,7 @@ import WordStackPage from "../pages/wordStack";
 import AuthPage from "../pages/authPage";
 import LoginPage from "../pages/loginPage";
 import RegisterPage from "../pages/registerPage";
+import AssignedPage from "../pages/assigned";
 const router = createBrowserRouter([
   {
     element: <HomeLayout />,
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/word-stack",
         element: <WordStackPage />,
+      },
+      {
+        path: "/assigned",
+        element: <AssignedPage />,
       },
     ],
   },

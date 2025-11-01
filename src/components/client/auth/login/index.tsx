@@ -6,27 +6,32 @@ import {
   GooglePlusOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../../redux/store";
+import { loginAction } from "../../../../redux/actions/auth";
 const LoginComponent = () => {
   const [loading, setLoading] = useState(false);
-
-  const onFinish = async (values: {
-    email: string;
-    password: string;
-    remember?: boolean;
-  }) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    console.log("🔹 Form values gửi đi:", values);
     setLoading(true);
+
     try {
-      message.success("Đăng nhập thành công (demo)");
-    } catch (e) {
-      message.error("Đăng nhập thất bại");
+      const result = await dispatch(
+        loginAction(
+          { email: values.email, password: values.password },
+          navigate
+        )
+      );
+      console.log("✅ Kết quả loginAction:", result);
+    } catch (err: any) {
+      console.error("❌ Lỗi đăng nhập:", err);
+      message.error(err?.response?.data?.message || "Đăng nhập thất bại");
     } finally {
       setLoading(false);
+      console.log("⏹ Kết thúc handleSubmit");
     }
-  };
-
-  const onGoogleLogin = () => {
-    message.info("Đăng nhập Google đang được cấu hình");
   };
 
   return (
@@ -36,8 +41,8 @@ const LoginComponent = () => {
         <Form
           name="login"
           layout="vertical"
-          onFinish={onFinish}
           autoComplete="off"
+          onFinish={handleSubmit}
         >
           <Form.Item
             label="Gmail"
@@ -84,13 +89,7 @@ const LoginComponent = () => {
           </div>
 
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              size="large"
-              block
-              loading={loading}
-            >
+            <Button type="primary" htmlType="submit" size="large" block>
               Đăng nhập
             </Button>
           </Form.Item>
@@ -102,7 +101,6 @@ const LoginComponent = () => {
             size="large"
             className="google-btn"
             block
-            onClick={onGoogleLogin}
           >
             Đăng nhập bằng Google
           </Button>

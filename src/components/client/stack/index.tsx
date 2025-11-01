@@ -21,6 +21,10 @@ import {
   Divider,
   message,
   Dropdown,
+  Tag,
+  Progress,
+  Typography,
+  Card,
 } from "antd";
 
 import "./style.scss";
@@ -49,7 +53,7 @@ const formItemLayout = {
     sm: { span: 17 },
   },
 };
-const StackComponent = () => {
+function StackComponent() {
   const [modal2Open, setModal2Open] = useState(false);
   const [form] = Form.useForm();
   const actionItems: MenuProps["items"] = [
@@ -88,6 +92,32 @@ const StackComponent = () => {
   const [addStackOpen, setAddStackOpen] = useState(false);
   const [addStackForm] = Form.useForm();
 
+  type StackItem = {
+    id: number;
+    name: string;
+    description?: string;
+    createdAt: string;
+  };
+  const [stacks, setStacks] = useState<StackItem[]>([
+    {
+      id: 1,
+      name: "Thiết kế UI/UX",
+      description: "Khởi tạo layout, màu sắc và component core",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: 2,
+      name: "Phát triển Backend API",
+      description: "Xây dựng endpoint, xác thực và tài liệu API",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: 3,
+      name: "Thiết lập CI/CD",
+      description: "Cấu hình pipeline build/test/deploy tự động",
+      createdAt: new Date().toISOString(),
+    },
+  ]);
   const [commentOpen, setCommentOpen] = useState(false);
   const [commentForm] = Form.useForm();
 
@@ -147,292 +177,417 @@ const StackComponent = () => {
     name: string;
     description?: string;
   }) => {
-    message.success(`Đã thêm stack: ${values.name}`);
+    const name = values.name?.trim();
+    if (!name) {
+      message.warning("Vui lòng nhập tên stack");
+      return;
+    }
+    const newStack: StackItem = {
+      id: stacks.length ? stacks[stacks.length - 1].id + 1 : 1,
+      name,
+      description: values.description?.trim(),
+      createdAt: new Date().toLocaleString(),
+    };
+    setStacks((prev) => [...prev, newStack]);
+    message.success(`Đã thêm stack: ${newStack.name}`);
     setAddStackOpen(false);
     addStackForm.resetFields();
   };
   return (
-    <div className="header-task">
-      <div className="header-task-item">
-        <div className="nav-list">
-          <div className="item-title">
-            <h2 className="txt-view-title">Task Manager</h2>
-          </div>
-          <div className="from-boards-list">
-            <div className="item-list-view">
-              <AppsIcon className="icon-add" />
-              <span className="txt-view-boards">Xem Bảng</span>
+    <>
+      <div className="header-task">
+        <div className="header-task-item">
+          <div className="nav-list">
+            <div className="item-title">
+              <h2 className="txt-view-title">Task Manager</h2>
             </div>
-            <p>|</p>
-            <div className="item-list-view">
-              <MenuIcon className="icon-add" />
-              <span className="txt-view-boards">Danh Sách</span>
+            <div className="from-boards-list">
+              <div className="item-list-view">
+                <AppsIcon className="icon-add" />
+                <span className="txt-view-boards">Xem Bảng</span>
+              </div>
+              <p>|</p>
+              <div className="item-list-view">
+                <MenuIcon className="icon-add" />
+                <span className="txt-view-boards">Danh Sách</span>
+              </div>
             </div>
-          </div>
-          <div className="from-search">
-            <div className="from-nav-search">
-              <SearchIcon className="icon-search" />
-              <input
-                type="text"
-                name=""
-                id=""
-                placeholder="Tìm kiếm"
-                className="nav-search"
-              />
+            <div className="from-search">
+              <div className="from-nav-search">
+                <SearchIcon className="icon-search" />
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  placeholder="Tìm kiếm"
+                  className="nav-search"
+                />
+              </div>
             </div>
-          </div>
-          <div className="from-function">
-            <button className="item-click">
-              <ContactPageIcon className="icon-add" />
-            </button>
-            <button className="item-click">
-              <FilterListIcon className="icon-add" />
-            </button>
-            <button className="item-click">
-              <SortIcon className="icon-add" />
-            </button>
-            <button className="item-click">
-              <AdjustIcon className="icon-add" />
-            </button>
-          </div>
-          <div className="from-members">
-            <Avatar.Group
-              max={{
-                count: 2,
-                style: { color: "#f56a00", backgroundColor: "#fde3cf" },
-              }}
-            >
-              <Avatar
-                size={43}
-                src="https://api.dicebear.com/7.x/miniavs/svg?seed=2"
-              />
-              <Avatar size={43} style={{ backgroundColor: "#f56a00" }}>
-                K
-              </Avatar>
-              <Tooltip title="Ant User" placement="top">
+            <div className="from-function">
+              <button className="item-click">
+                <ContactPageIcon className="icon-add" />
+              </button>
+              <button className="item-click">
+                <FilterListIcon className="icon-add" />
+              </button>
+              <button className="item-click">
+                <SortIcon className="icon-add" />
+              </button>
+              <button className="item-click">
+                <AdjustIcon className="icon-add" />
+              </button>
+            </div>
+            <div className="from-members">
+              <Avatar.Group
+                max={{
+                  count: 2,
+                  style: { color: "#f56a00", backgroundColor: "#fde3cf" },
+                }}
+              >
                 <Avatar
                   size={43}
-                  style={{ backgroundColor: "#87d068" }}
-                  icon={<UserOutlined />}
+                  src="https://api.dicebear.com/7.x/miniavs/svg?seed=2"
                 />
-              </Tooltip>
-              <Avatar
-                size={43}
-                style={{ backgroundColor: "#1677ff" }}
-                icon={<AntDesignOutlined />}
-              />
-            </Avatar.Group>
-            <div className="item-add" onClick={() => setModal2Open(true)}>
-              <ControlPointIcon className="icon-add" />
-            </div>
-          </div>
-        </div>
-        <div className="from-task">
-          <div className="item-err" onClick={() => setModal2Open(true)}>
-            <FileAddOutlined className="icon-err" />
-            <p className="txt-err">Thêm Stack</p>
-          </div>
-        </div>
-        <div className="stack">
-          <div className="item-stack">
-            <div className="form-item-stack">
-              <h2 className="txt-stack-title">Thiết kế UI/UX</h2>
-              <div className="item-tack">
-                <Dropdown
-                  placement="bottomRight"
-                  trigger={["click"]}
-                  menu={{ items: actionItems, onClick: onActionClick }}
-                >
-                  <Button
-                    type="text"
-                    className="item-actions"
-                    icon={<MoreOutlined />}
-                    aria-label="Tùy chọn"
+                <Avatar size={43} style={{ backgroundColor: "#f56a00" }}>
+                  K
+                </Avatar>
+                <Tooltip title="Ant User" placement="top">
+                  <Avatar
+                    size={43}
+                    style={{ backgroundColor: "#87d068" }}
+                    icon={<UserOutlined />}
                   />
-                </Dropdown>
-              </div>
-
-              <div className="from-function">
-                <Space size="middle" className="actions-left">
-                  <Tooltip title="Tạo thẻ mới">
-                    <Button
-                      type="primary"
-                      className="action-btn"
-                      icon={<PlusOutlined />}
-                      onClick={() => setAddStackOpen(true)}
-                    >
-                      Thêm
-                    </Button>
-                  </Tooltip>
-
-                  <Tooltip title="Bình luận">
-                    <Button
-                      className="action-btn"
-                      icon={<MessageOutlined />}
-                      onClick={() => setCommentOpen(true)}
-                    >
-                      Bình luận
-                    </Button>
-                  </Tooltip>
-
-                  <Tooltip title="Xóa mục đã chọn">
-                    <Button
-                      danger
-                      className="action-btn"
-                      icon={<DeleteOutlined />}
-                    >
-                      Xóa
-                    </Button>
-                  </Tooltip>
-                </Space>
-                <Divider type="vertical" className="actions-divider" />
-                <Space className="actions-right">
-                  <Tooltip title="Tác vụ khác">
-                    <Button
-                      type="text"
-                      className="action-btn more-btn"
-                      icon={<MoreOutlined />}
-                    />
-                  </Tooltip>
-                </Space>
+                </Tooltip>
+                <Avatar
+                  size={43}
+                  style={{ backgroundColor: "#1677ff" }}
+                  icon={<AntDesignOutlined />}
+                />
+              </Avatar.Group>
+              <div className="item-add" onClick={() => setModal2Open(true)}>
+                <ControlPointIcon className="icon-add" />
               </div>
             </div>
           </div>
+          <div className="from-task">
+            <div className="item-err" onClick={() => setModal2Open(true)}>
+              <FileAddOutlined className="icon-err" />
+              <p className="txt-err">Thêm Stack</p>
+            </div>
+          </div>
+          <div className="stack">
+            <div className="item-stack">
+              <Card
+                className="stack-card"
+                bordered
+                title={
+                  <Space align="center" size={8}>
+                    <Typography.Text className="txt-stack-title">
+                      Tasck
+                    </Typography.Text>
+                    <Tag color="green">Hoạt động</Tag>
+                  </Space>
+                }
+                extra={
+                  <Space size={8}>
+                    <Tooltip title="Sửa">
+                      <Button type="text" icon={<EditOutlined />} />
+                    </Tooltip>
+                    <Dropdown
+                      placement="bottomRight"
+                      trigger={["click"]}
+                      menu={{ items: actionItems, onClick: onActionClick }}
+                    >
+                      <Button
+                        type="text"
+                        className="item-actions"
+                        icon={<MoreOutlined />}
+                        aria-label="Tùy chọn"
+                      />
+                    </Dropdown>
+                  </Space>
+                }
+              >
+                <div className="stack-meta">
+                  <Space
+                    size="middle"
+                    wrap
+                    className="stack-content"
+                    style={{ marginTop: 5 }}
+                  >
+                    {stacks.map((stack) => (
+                      <div key={stack.id} className="meta-item">
+                        <Space direction="vertical" size={4}>
+                          <Typography.Text strong className="meta-title">
+                            {stack.name}
+                          </Typography.Text>
+                          {stack.description && (
+                            <Typography.Text
+                              type="secondary"
+                              className="meta-desc"
+                            >
+                              {stack.description}
+                            </Typography.Text>
+                          )}
+                          <Space size={8} wrap>
+                            <Tag color="blue">Đang làm</Tag>
+                            <Tag color="gold">Ưu tiên: Cao</Tag>
+                            <div className="meta-progress">
+                              <Progress percent={60} size="small" />
+                            </div>
+                          </Space>
+                          <Typography.Text
+                            type="secondary"
+                            className="meta-time"
+                          >
+                            Tạo: {stack.createdAt}
+                          </Typography.Text>
+                        </Space>
+                        <Divider className="divider-stack" />
+                      </div>
+                    ))}
+                  </Space>
+                </div>
+                <div className="stack-actions">
+                  <Space size="middle">
+                    <Tooltip title="Tạo thẻ mới">
+                      <Button
+                        type="primary"
+                        className="action-btn"
+                        icon={<PlusOutlined />}
+                        onClick={() => setAddStackOpen(true)}
+                      >
+                        Thêm
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Bình luận">
+                      <Button
+                        className="action-btn"
+                        icon={<MessageOutlined />}
+                        onClick={() => setCommentOpen(true)}
+                      >
+                        Bình luận
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Xóa mục đã chọn">
+                      <Button
+                        danger
+                        className="action-btn"
+                        icon={<DeleteOutlined />}
+                      >
+                        Xóa
+                      </Button>
+                    </Tooltip>
+                  </Space>
+                </div>
+              </Card>
+            </div>
+            <div className="modal-stack">
+              <Modal
+                title="Bình luận"
+                className="chat-modal"
+                open={commentOpen}
+                onCancel={() => setCommentOpen(false)}
+                footer={null}
+              >
+                <div className="chat-body" ref={chatBodyRef}>
+                  {messages.map((m) => (
+                    <div
+                      key={m.id}
+                      className={`message ${m.isMe ? "me" : "other"}`}
+                    >
+                      <Avatar
+                        size={32}
+                        style={{
+                          backgroundColor: m.isMe ? "#1677ff" : "#87d068",
+                        }}
+                        icon={<UserOutlined />}
+                      />
+                      <div className="bubble">
+                        <div className="meta">
+                          <span className="author">{m.author}</span>
+                          <span className="time">{m.createdAt}</span>
+                        </div>
+                        <div className="content">{m.content}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <Form
+                  form={commentForm}
+                  className="chat-input"
+                  onFinish={handleSendComment}
+                >
+                  <Form.Item
+                    name="content"
+                    noStyle
+                    rules={[
+                      { required: true, message: "Vui lòng nhập nội dung" },
+                      { max: 500, message: "Tối đa 500 ký tự" },
+                    ]}
+                  >
+                    <Input.TextArea
+                      autoSize={{ minRows: 1, maxRows: 4 }}
+                      placeholder="Nhập bình luận... (Enter để gửi, Shift+Enter xuống dòng)"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          commentForm.submit();
+                        }
+                      }}
+                    />
+                  </Form.Item>
+                  <Button
+                    type="primary"
+                    icon={<SendOutlined />}
+                    onClick={() => commentForm.submit()}
+                  >
+                    Gửi
+                  </Button>
+                </Form>
+              </Modal>
+            </div>
+          </div>
+        </div>
+        <div className="modal-stack">
+          <Modal
+            title="Thêm Stack"
+            className="modal-stack"
+            style={{ textAlign: "center" }}
+            centered
+            open={modal2Open}
+            onOk={() => setModal2Open(false)}
+            onCancel={() => setModal2Open(false)}
+          >
+            <Form form={form} {...formItemLayout} style={{ marginTop: "30px" }}>
+              <Form.Item
+                label="Nhập tiêu đề"
+                name="Input"
+                rules={[{ required: true, message: "Please input!" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Thành viên"
+                name="Select"
+                rules={[{ required: true, message: "Please input!" }]}
+              >
+                <Select mode="multiple">
+                  <Select.Option value="demo">Demo</Select.Option>
+                  <Select.Option value="admin">Admin</Select.Option>
+                  <Select.Option value="user">User</Select.Option>
+                  <Select.Option value="guest">Guest</Select.Option>
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Nhập mô tả"
+                name="TextArea"
+                rules={[{ required: true, message: "Please input!" }]}
+              >
+                <TextArea rows={4} />
+              </Form.Item>
+            </Form>
+          </Modal>
+        </div>
+        <div className="modal-stack">
+          <Modal
+            title="Thêm Stack"
+            open={addStackOpen}
+            onCancel={() => setAddStackOpen(false)}
+            onOk={() => addStackForm.submit()}
+            okText="Thêm"
+          >
+            <Form
+              form={addStackForm}
+              layout="vertical"
+              onFinish={handleAddStackSubmit}
+            >
+              <Form.Item
+                name="name"
+                label="Tên stack"
+                rules={[{ required: true, message: "Vui lòng nhập tên stack" }]}
+              >
+                <Input placeholder="Ví dụ: Sprint Q4" />
+              </Form.Item>
+
+              <Form.Item
+                name="description"
+                label="Mô tả"
+                rules={[{ max: 255, message: "Tối đa 255 ký tự" }]}
+              >
+                <Input.TextArea rows={3} placeholder="Mô tả ngắn cho stack" />
+              </Form.Item>
+            </Form>
+          </Modal>
+        </div>
+        <div className="modal-stack">
+          <Modal
+            title="Bình luận"
+            className="chat-modal"
+            open={commentOpen}
+            onCancel={() => setCommentOpen(false)}
+            footer={null}
+          >
+            <div className="chat-body" ref={chatBodyRef}>
+              {messages.map((m) => (
+                <div
+                  key={m.id}
+                  className={`message ${m.isMe ? "me" : "other"}`}
+                >
+                  <Avatar
+                    size={32}
+                    style={{ backgroundColor: m.isMe ? "#1677ff" : "#87d068" }}
+                    icon={<UserOutlined />}
+                  />
+                  <div className="bubble">
+                    <div className="meta">
+                      <span className="author">{m.author}</span>
+                      <span className="time">{m.createdAt}</span>
+                    </div>
+                    <div className="content">{m.content}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Form
+              form={commentForm}
+              className="chat-input"
+              onFinish={handleSendComment}
+            >
+              <Form.Item
+                name="content"
+                noStyle
+                rules={[
+                  { required: true, message: "Vui lòng nhập nội dung" },
+                  { max: 500, message: "Tối đa 500 ký tự" },
+                ]}
+              >
+                <Input.TextArea
+                  autoSize={{ minRows: 1, maxRows: 4 }}
+                  placeholder="Nhập bình luận... (Enter để gửi, Shift+Enter xuống dòng)"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      commentForm.submit();
+                    }
+                  }}
+                />
+              </Form.Item>
+              <Button
+                type="primary"
+                icon={<SendOutlined />}
+                onClick={() => commentForm.submit()}
+              >
+                Gửi
+              </Button>
+            </Form>
+          </Modal>
         </div>
       </div>
-      <div className="modal-stack">
-        <Modal
-          title="Thêm Stack"
-          className="modal-stack"
-          style={{ textAlign: "center" }}
-          centered
-          open={modal2Open}
-          onOk={() => setModal2Open(false)}
-          onCancel={() => setModal2Open(false)}
-        >
-          <Form form={form} {...formItemLayout} style={{ marginTop: "30px" }}>
-            <Form.Item
-              label="Nhập tiêu đề"
-              name="Input"
-              rules={[{ required: true, message: "Please input!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Thành viên"
-              name="Select"
-              rules={[{ required: true, message: "Please input!" }]}
-            >
-              <Select mode="multiple">
-                <Select.Option value="demo">Demo</Select.Option>
-                <Select.Option value="admin">Admin</Select.Option>
-                <Select.Option value="user">User</Select.Option>
-                <Select.Option value="guest">Guest</Select.Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Nhập mô tả"
-              name="TextArea"
-              rules={[{ required: true, message: "Please input!" }]}
-            >
-              <TextArea rows={4} />
-            </Form.Item>
-          </Form>
-        </Modal>
-      </div>
-      <div className="modal-stack">
-        <Modal
-          title="Thêm Stack"
-          open={addStackOpen}
-          onCancel={() => setAddStackOpen(false)}
-          onOk={() => addStackForm.submit()}
-          okText="Thêm"
-        >
-          <Form
-            form={addStackForm}
-            layout="vertical"
-            onFinish={handleAddStackSubmit}
-          >
-            <Form.Item
-              name="name"
-              label="Tên stack"
-              rules={[{ required: true, message: "Vui lòng nhập tên stack" }]}
-            >
-              <Input placeholder="Ví dụ: Sprint Q4" />
-            </Form.Item>
-
-            <Form.Item
-              name="description"
-              label="Mô tả"
-              rules={[{ max: 255, message: "Tối đa 255 ký tự" }]}
-            >
-              <Input.TextArea rows={3} placeholder="Mô tả ngắn cho stack" />
-            </Form.Item>
-          </Form>
-        </Modal>
-      </div>
-      <div className="modal-stack">
-        <Modal
-          title="Bình luận"
-          className="chat-modal"
-          open={commentOpen}
-          onCancel={() => setCommentOpen(false)}
-          footer={null}
-        >
-          <div className="chat-body" ref={chatBodyRef}>
-            {messages.map((m) => (
-              <div key={m.id} className={`message ${m.isMe ? "me" : "other"}`}>
-                <Avatar
-                  size={32}
-                  style={{ backgroundColor: m.isMe ? "#1677ff" : "#87d068" }}
-                  icon={<UserOutlined />}
-                />
-                <div className="bubble">
-                  <div className="meta">
-                    <span className="author">{m.author}</span>
-                    <span className="time">{m.createdAt}</span>
-                  </div>
-                  <div className="content">{m.content}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <Form
-            form={commentForm}
-            className="chat-input"
-            onFinish={handleSendComment}
-          >
-            <Form.Item
-              name="content"
-              noStyle
-              rules={[
-                { required: true, message: "Vui lòng nhập nội dung" },
-                { max: 500, message: "Tối đa 500 ký tự" },
-              ]}
-            >
-              <Input.TextArea
-                autoSize={{ minRows: 1, maxRows: 4 }}
-                placeholder="Nhập bình luận... (Enter để gửi, Shift+Enter xuống dòng)"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    commentForm.submit();
-                  }
-                }}
-              />
-            </Form.Item>
-            <Button
-              type="primary"
-              icon={<SendOutlined />}
-              onClick={() => commentForm.submit()}
-            >
-              Gửi
-            </Button>
-          </Form>
-        </Modal>
-      </div>
-    </div>
+    </>
   );
-};
+}
 export default StackComponent;
